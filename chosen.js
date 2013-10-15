@@ -8,7 +8,7 @@
     '$timeout', function($timeout) {
       var CHOSEN_OPTION_WHITELIST, NG_OPTIONS_REGEXP, chosen, isEmpty, snakeCase;
       NG_OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?(?:\s+group\s+by\s+(.*))?\s+for\s+(?:([\$\w][\$\w\d]*)|(?:\(\s*([\$\w][\$\w\d]*)\s*,\s*([\$\w][\$\w\d]*)\s*\)))\s+in\s+(.*)$/;
-      CHOSEN_OPTION_WHITELIST = ['noResultsText', 'allowSingleDeselect', 'disableSearchThreshold', 'disableSearch', 'enableSplitWordSearch', 'inheritSelectClasses', 'maxSelectedOptions', 'placeholderTextMultiple', 'placeholderTextSingle', 'searchContains', 'singleBackstrokeDelete', 'displayDisabledOptions', 'displaySelectedOptions','width'];
+      CHOSEN_OPTION_WHITELIST = ['allowSingleDeselect', 'disableSearchThreshold', 'disableSearch', 'enableSplitWordSearch', 'inheritSelectClasses', 'maxSelectedOptions', 'placeholderTextMultiple', 'placeholderTextSingle', 'searchContains', 'singleBackstrokeDelete', 'displayDisabledOptions', 'displaySelectedOptions', 'width'];
       snakeCase = function(input) {
         return input.replace(/[A-Z]/g, function($1) {
           return "_" + ($1.toLowerCase());
@@ -32,7 +32,7 @@
         restrict: 'A',
         require: '?ngModel',
         link: function(scope, element, attr, ctrl) {
-          var disableWithMessage, match, options, startLoading, stopLoading, valuesExpr;
+          var match, options, startLoading, stopLoading, valuesExpr;
           options = scope.$eval(attr.chosen) || {};
           angular.forEach(attr, function(value, key) {
             if (__indexOf.call(CHOSEN_OPTION_WHITELIST, key) >= 0) {
@@ -44,9 +44,6 @@
           };
           stopLoading = function() {
             return element.removeClass('loading').attr('disabled', false).trigger('chosen:updated');
-          };
-          disableWithMessage = function(message) {
-            return element.empty().append("<option selected>" + message + "</option>").attr('disabled', true).trigger('chosen:updated');
           };
           $timeout(function() {
             return element.chosen(options);
@@ -66,10 +63,7 @@
             }
             return scope.$watch(valuesExpr, function(newVal, oldVal) {
               if (newVal !== oldVal) {
-                stopLoading();
-                if (isEmpty(newVal)) {
-                  return disableWithMessage(options.no_results_text || 'No values available');
-                }
+                return stopLoading();
               }
             });
           }
@@ -77,4 +71,5 @@
       };
     }
   ]);
+
 }).call(this);

@@ -7,7 +7,6 @@ angular.module('localytics.directives').directive 'chosen', ['$timeout', ($timeo
 
   # Whitelist of options that will be parsed from the element's attributes and passed into Chosen
   CHOSEN_OPTION_WHITELIST = [
-    'noResultsText'
     'allowSingleDeselect'
     'disableSearchThreshold'
     'disableSearch'
@@ -45,9 +44,6 @@ angular.module('localytics.directives').directive 'chosen', ['$timeout', ($timeo
 
       startLoading = -> element.addClass('loading').attr('disabled', true).trigger('chosen:updated')
       stopLoading = -> element.removeClass('loading').attr('disabled', false).trigger('chosen:updated')
-
-      disableWithMessage = (message) ->
-        element.empty().append("<option selected>#{message}</option>").attr('disabled', true).trigger('chosen:updated')
       
       # Init chosen on the next loop so ng-options can populate the select
       $timeout -> element.chosen options
@@ -67,5 +63,4 @@ angular.module('localytics.directives').directive 'chosen', ['$timeout', ($timeo
         scope.$watch valuesExpr, (newVal, oldVal) -> 
           unless newVal is oldVal
             stopLoading()
-            disableWithMessage(options.no_results_text || 'No values available') if isEmpty(newVal)
 ]
